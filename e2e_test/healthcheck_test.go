@@ -1,5 +1,3 @@
-// +build e2e
-
 package e2e_test
 
 import (
@@ -9,22 +7,20 @@ import (
 	"testing"
 )
 
-type EndToEndSuite struct {
+type EndToEndSuite struct{
 	suite.Suite
 }
 
-func TestEndToEndSuite(t *testing.T) {
+func TestEndToEndSuite (t *testing.T){
 	suite.Run(t, new(EndToEndSuite))
 }
 
 func (s *EndToEndSuite) TestHappyHealthcheck() {
 	c := http.Client{}
-
 	r, _ := c.Get("http://localhost:8080/healthcheck")
 
 	s.Equal(http.StatusOK, r.StatusCode)
-
-	b, _ := ioutil.ReadAll(r.Body)
-
-	s.JSONEq(`{"status": "OK", "messages": []}`, string(b))
+	
+	body, _ := ioutil.ReadAll(r.Body)
+	s.JSONEq(`{"status": "OK", "messages": []}`, string(body))
 }
