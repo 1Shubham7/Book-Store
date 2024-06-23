@@ -3,7 +3,7 @@ package book
 import (
 	"database/sql"
 	"errors"
-	"github.com/testingallthethings/033-go-rest/rest"
+	"github.com/1shubham7/bookstore/rest"
 )
 
 type DBRetriever struct {

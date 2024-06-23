@@ -5,11 +5,46 @@ import (
 	"net/http"
 )
 
+type health struct {
+	Status string `json:"status"`
+	Messages []string `json:"messages"`
+}
+
 func main() {
+
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatalf("Error making DB connected: %s", err.Error())
+	}
+
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		log.Fatalf("Error making DB driver: %s", err.Error())
+	}
+
+	migrator, err := migrate.NewWithDatabaseInstance(
+		"file://migrations",
+		"postgres",
+		driver,
+	)
+	if err != nil {
+		log.Fatalf("Error making migration engine: %s", err.Error())
+	}
+	migrator.Steps(2)
+
+	
 	r := mux.NewRouter()
 
-	r.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request){
-		w.WriteHeader(http.StatusOK)
+	r.HandleFunc(
+		"/healthcheck", 
+		func(w http.ResponseWriter, r *http.Request){
+			h := health{
+				Status : "OK",
+				Messages: []string{},
+			}
+			b, _ := json.Marshal(h)
+			w.Write(b)
+			w.WriteHeader(http.StatusOK)
 	})
 
 	s := http.Server{
