@@ -1,4 +1,4 @@
-module github.com/testingallthethings/033-go-rest
+module github.com/1shubham7/bookstore
 
 go 1.13
 
