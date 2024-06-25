@@ -1,6 +1,18 @@
 package main
 
 import (
+	"database/sql"
+	"encoding/json"
+	"github.com/gorilla/mux"
+	"log"
+	"net/http"
+	"os"
+	"time"
+	"fmt"
+
+	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/database/postgres"
+
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -8,6 +20,11 @@ import (
 type health struct {
 	Status string `json:"status"`
 	Messages []string `json:"messages"`
+}
+
+type jsonError struct{
+	Code string `json:"code"`
+	Msg string `json:"msg"`
 }
 
 func main() {
@@ -43,9 +60,26 @@ func main() {
 				Messages: []string{},
 			}
 			b, _ := json.Marshal(h)
-			w.Write(b)
 			w.WriteHeader(http.StatusOK)
+			w.Write(b)
+			
 	})
+
+	r.HandleFunc(
+		"/book/{isbn}",
+		func(w http.ResponseWriter, r *http.Request){
+			v := mux.Vars(r)
+			e := jsonError{
+				code: "001",
+				Msg: fmt.Sprintf("No books with ISBN %s", v["isbn"]),
+			}
+
+			b,_ := json.Marshal(e)
+			q := jsonError
+			w.WriteHeader(http.StatusNotFound)
+			w.Write(b)
+		},
+	)
 
 	s := http.Server{
 		Addr: ":8080",
