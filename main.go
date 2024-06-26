@@ -12,9 +12,6 @@ import (
 
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/postgres"
-
-	"github.com/gorilla/mux"
-	"net/http"
 )
 
 type health struct {
