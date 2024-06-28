@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"github.com/testingallthethings/033-go-rest/book"
-	"github.com/testingallthethings/033-go-rest/rest"
+	"github.com/1shubham7/bookstore/book"
+	"github.com/1shubham7/bookstore/rest"
 	"testing"
 )
 
